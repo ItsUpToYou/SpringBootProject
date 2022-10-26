@@ -2,6 +2,8 @@ package com.shopme.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -44,5 +46,45 @@ public class UserRepositoryTest {
 
 		User savedUser = repo.save(user2);
 		assertThat(savedUser.getId()).isGreaterThan(0);
+	}
+	
+	@Test
+	public void testListAllUsers() {
+		Iterable<User> listUsers = repo.findAll();
+		listUsers.forEach(user -> System.out.println(user));
+	}
+
+	@Test
+	public void testGetUserById() {
+		User userId = repo.findById(1).get();
+		System.out.println(userId);
+		assertThat(userId).isNotNull();
+	}
+		
+	@Test
+	public void testUpdateUserDetails() {
+		User userId = repo.findById(1).get();
+		userId.setEnabled(true);
+		userId.setEmail("updated@mail.com");
+
+		repo.save(userId);
+	}
+		
+	@Test
+	public void testUpdateUserRole(){
+		User userId = repo.findById(2).get();
+		Role roleEditor = new Role(3);
+		Role roleSalesPerson = new Role(2);
+		
+		userId.getRoles().remove(roleEditor);
+		userId.addRole(roleSalesPerson);
+		
+		repo.save(userId);
+	}
+	
+	@Test
+	public void testDeleteUSer() {
+		//deleting second user with id=2
+		repo.deleteById(2);
 	}
 }
