@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-	<title> Home - Shopme Admin Panel</title>
+	<title> Create New User</title>
 
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
 	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
@@ -42,7 +42,7 @@
 						<a class="nav-link" th:href="@{/shipping}">Shipping</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/orders}">Orders</a>
+						< class="nav-link" th:href="@{/orders}">Orders <a/>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/report}">Sales Report</a>
@@ -62,6 +62,11 @@
 	</div>
 	<div>
 		<h2>Manage Users</h2>
+		<a th:href="@{/users/new}"> Create New User</a>
+	</div>
+
+	<div th:if="${message != null}" class="alert alert-success text-center">
+		[[${message}]]
 	</div>
 	<div>
 		<table class="table table-bordered table-striped table-hover table-responsive-xl">

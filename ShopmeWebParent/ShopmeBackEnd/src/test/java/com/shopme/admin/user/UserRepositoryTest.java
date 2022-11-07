@@ -2,8 +2,7 @@ package com.shopme.admin.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
-
+ 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -86,5 +85,12 @@ public class UserRepositoryTest {
 	public void testDeleteUSer() {
 		//deleting second user with id=2
 		repo.deleteById(2);
+	}
+	
+	@Test
+	public void testGetUserByEmail() {
+		String email = "'mail@mail.to'";
+		User user = repo.getUserByEmail(email);
+		assertThat(user).isNotNull();
 	}
 }
