@@ -7,6 +7,8 @@
 	<title> Create New User</title>
 
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/images/fontawesome/all.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/images/style.css}"/>
 	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
@@ -42,7 +44,7 @@
 						<a class="nav-link" th:href="@{/shipping}">Shipping</a>
 					</li>
 					<li class="nav-item">
-						< class="nav-link" th:href="@{/orders}">Orders <a/>
+						<a class="nav-link" th:href="@{/orders}">Orders </a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/report}">Sales Report</a>
@@ -85,13 +87,20 @@
 			<tbody>
 				<tr th:each="user : ${listUsers}">
 					<td>[[${user.id}]]</td>
-					<td></td>
+					<td><span class="fas fa-portrait fa-3x icon-dark"  ></span></td>
 					<td>[[${user.email}]]</td>
 					<td>[[${user.firstName}]]</td>
 					<td>[[${user.lastName}]]</td>
 					<td>[[${user.roles}]]</td>
-					<td>[[${user.enabled}]]</td>
-					<td>Edit &nbsp; Delete</td>
+					<td>
+						<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green" href=""></a>
+						<a th:if="${user.enabled == false}" class="fas fa-check-circle fa-2x icon-dark" href=""></a>
+					</td>
+					<td>
+						<a class="fas fa-edit fa-2x icon-green" href="" ></a> &nbsp;
+							<a class="fas fa-trash fa-2x icon-silver" href="" ></a>
+					</td>
+					
 				</tr>
 			</tbody>
 		</table>
