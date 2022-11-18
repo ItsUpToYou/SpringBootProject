@@ -30,8 +30,8 @@ public class UserService {
 	}
 
 	public void save(User user) {
-		boolean isUpdating = (user.getId() != null);
-		if (isUpdating) {
+		boolean isUpdatingUser = (user.getId() != null);
+		if (isUpdatingUser) {
 			User existingUser = userRepo.findById(user.getId()).get();
 			if (user.getPassword().isEmpty()) {
 				user.setPassword(existingUser.getPassword());
@@ -69,7 +69,7 @@ public class UserService {
 			}
 		}
 
-		return userByEmail == null;
+		return true;
 	}
 
 	public User get(Integer id) throws UserNotFoundException {
@@ -79,4 +79,14 @@ public class UserService {
 			throw new UserNotFoundException("Could not find any user with ID: " + id);
 		}
 	}
+
+	public void delete(Integer id) throws UserNotFoundException {
+		Long countById = userRepo.countById(id);
+		if (countById == null || countById == 0) {
+			throw new UserNotFoundException("Could not find any user with ID: " + id);
+		}
+
+		userRepo.deleteById(id);
+	}
+			
 }
