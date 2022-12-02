@@ -87,15 +87,19 @@
 				<tbody>
 				<tr th:each="user : ${listUsers}">
 					<td>[[${user.id}]]</td>
-					<td><span class="fas fa-portrait fa-3x icon-dark"></span></td>
+					<td>
+						 <span th:if="${user.photos == null }" class="fas fa-portrait fa-3x icon-dark"></span>
+						<img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" 
+							style="width:100px" />
+					</td>
 					<td>[[${user.email}]]</td>
 					<td>[[${user.firstName}]]</td>
 					<td>[[${user.lastName}]]</td>
 					<td>[[${user.roles}]]</td>
 					<td>
-						<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green" 
+						<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
 						   th:href="@{'/users/' + ${user.id} + '/enabled/false'}"
-						title="Disable this user"></a>
+						   title="Disable this user"></a>
 						<a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
 						   th:href="@{'/users/' + ${user.id} + '/enabled/true'}"
 						   title="Enable this user"></a>
@@ -103,7 +107,7 @@
 					<td>
 						<a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
 						   title="Edit this user"></a> &nbsp;
-						<a class="fas fa-trash fa-2x icon-dark link-delete" 
+						<a class="fas fa-trash fa-2x icon-dark link-delete"
 						   th:href="@{'/users/delete/' + ${user.id}}"
 						   th:userId="${user.id}"
 						   title="Delete this user"></a>
@@ -117,7 +121,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" >Delete Confirmation</h4>
+						<h4 class="modal-title">Delete Confirmation</h4>
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 
@@ -137,8 +141,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$(document).ready(function (){
-			$(".link-delete").on("click", function (e){
+		$(document).ready(function () {
+			$(".link-delete").on("click", function (e) {
 				e.preventDefault();
 				link = $(this);
 				//alert($(this).attr("href"));
