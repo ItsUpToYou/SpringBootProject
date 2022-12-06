@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,11 +29,31 @@ public class UserController {
 	private UserService service;
 
 	@GetMapping("/users")
-	public String listAll(Model model) {
-		List<User> listUsers = service.listAll();
+	public String listFIrstPage(Model model) {
+		return listByPage(1, model);
+	}
+
+	@GetMapping("/users/page/{pageNum}")
+	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model) {
+		Page<User> page = service.listByPage(pageNum);
+		List<User> listUsers = page.getContent();
+
+		long startCount = (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
+		long endCount = startCount + UserService.USERS_PER_PAGE - 1;
+
+		if (endCount > page.getTotalElements()) {
+			endCount = page.getTotalElements();
+		}
+		
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("startCount", startCount);
+		model.addAttribute("endCount", endCount);
+		model.addAttribute("totalItems", page.getTotalElements());
 		model.addAttribute("listUsers", listUsers);
 
 		return "users";
+
 	}
 
 	@GetMapping("/users/new")
@@ -49,7 +70,7 @@ public class UserController {
 
 	@PostMapping("/users/save")
 	public String saveUser(User user, RedirectAttributes redirectAttributes,
-		@RequestParam("image") MultipartFile multipartFile) throws IOException {
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 
 		if (!multipartFile.isEmpty()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
@@ -59,11 +80,13 @@ public class UserController {
 			FileUploadUtil.cleanDir(uploadDir);
 			FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		} else {
-			if (user.getPhotos().isEmpty()){ user.setPhotos(null);}
-					
+			if (user.getPhotos().isEmpty()) {
+				user.setPhotos(null);
+			}
+
 			service.save(user);
-		} 
-	 
+		}
+
 		redirectAttributes.addFlashAttribute("message", "The user has been saved successfully!");
 		return "redirect:/users";
 	}
@@ -99,11 +122,11 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}/enabled/{status}")
-  	public String updateUserEnabledStatus(
-				@PathVariable("id") Integer id,
-				@PathVariable("status") boolean enabled,
-				RedirectAttributes redirectAttributes) {
-		
+	public String updateUserEnabledStatus(
+			@PathVariable("id") Integer id,
+			@PathVariable("status") boolean enabled,
+			RedirectAttributes redirectAttributes) {
+
 		service.updateUserEnabledStatus(id, enabled);
 		String status = enabled ? "enabled" : "disabled";
 		String message = "The user ID " + id + "has been " + status;
